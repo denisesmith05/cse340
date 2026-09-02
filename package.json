@@ -1,0 +1,20 @@
+{
+  "name": "cse340",
+  "version": "1.0.0",
+  "description": "This repo is where I will commit all of my projects for cse340.",
+  "homepage": "https://github.com/denisesmith05/cse340#readme",
+  "bugs": {
+    "url": "https://github.com/denisesmith05/cse340/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denisesmith05/cse340.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
