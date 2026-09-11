@@ -26,15 +26,12 @@ html, body {
     .nav-links li {
     display: block;
     padding: 2rem;
-    font-size: 2rem;
     flex: 1 1 1 1;
     }
 
     .nav-links a {
-    position: relative;
-
     color: #ffffff;
-    font-size: 0.95rem;
+    font-size: 1.5rem;
     font-weight: 500;
     text-decoration: none;
 
