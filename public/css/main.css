@@ -24,6 +24,7 @@ html, body {
 
     .nav-links li {
     display: block;
+    padding: auto;
     }
 
     .nav-links a {
