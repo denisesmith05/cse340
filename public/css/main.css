@@ -1,5 +1,5 @@
 html, body {
-    header {
+    header{
     background-color: #17243a;
     border-bottom: 3px solid #c9a45c;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
@@ -9,7 +9,6 @@ html, body {
     max-width: 1100px;
     min-height: 75px;
     margin: 0 auto;
-    padding: 0 30px;
 
     display: flex;
     align-items: center;
@@ -36,7 +35,6 @@ html, body {
     .nav-links{
     display: flex;
     align-items: center;
-    gap: 30px;
 
     margin: 0;
     padding: 0;
@@ -200,21 +198,23 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
         content: "X";
         text-decoration: none;
         font-size: 1.5rem;
-        color: red;
+        color: white;
     }
 
     .nav-div a {
         text-decoration: none;
+        width: 100%;
     }
+
     #menu::before {
         content: "≡";
         text-decoration: none;
         font-size: 1.5rem;
-        color: red;
+        color: white;
     }
 
     #menu:hover {
-        color:#ccc;
+        color:red;
     }
 
     .nav-links li {
