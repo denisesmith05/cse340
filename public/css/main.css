@@ -21,11 +21,12 @@ html, body {
     .nav-links{
     display: flex;
     align-items: center;
+    justify-content: center;
     }
 
     .nav-links li {
     display: block;
-    padding: 2rem auto;
+    padding: 2rem;
     }
 
     .nav-links a {
