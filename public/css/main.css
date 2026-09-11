@@ -26,6 +26,8 @@ html, body {
     .nav-links li {
     display: block;
     padding: 2rem;
+    font-size: 1.2rem;
+    flex: 1 1 1 1;
     }
 
     .nav-links a {
