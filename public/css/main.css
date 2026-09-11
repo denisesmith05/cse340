@@ -19,7 +19,8 @@ html, body {
     /* Navigation Links */
 
     .nav-links{
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
     align-items: center;
     justify-content: center;
     }
