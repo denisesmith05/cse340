@@ -20,7 +20,7 @@ html, body {
 
     .nav-links{
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(4, auto);
     align-items: center;
     justify-content: center;
     }
