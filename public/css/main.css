@@ -19,10 +19,8 @@ html, body {
     /* Navigation Links */
 
     .nav-links{
-    display: grid;
-    grid-template-columns: repeat(4, auto);
-    align-items: center;
-    justify-content: center;
+    display: flex;
+    align-content: center;
     }
 
     .nav-links li {
