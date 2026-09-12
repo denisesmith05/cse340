@@ -20,12 +20,12 @@ html, body {
 
     .nav-links{
     display: flex;
-    align-content: center;
     }
 
     .nav-links li {
     display: block;
     padding: 2rem;
+    text-align: center;
     }
 
     .nav-links a {
