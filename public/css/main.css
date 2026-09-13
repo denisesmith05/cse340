@@ -176,6 +176,19 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
         color: white; */
     }
 
+    /*Hide menu links initially*/
+    .nav-links{
+        /* justify-content: center; */
+        display: none;
+        flex-direction: column;
+
+        width: 100%;
+        margin: 70px 0 0;
+        padding: 0;
+
+        list-style: none;
+    }
+
     .nav-div a {
         text-decoration: none;
         width: 100%;
@@ -183,13 +196,6 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
 
     #menu:hover {
         color:red;
-    }
-
-    .nav-links{
-        justify-content: center;
-        display: none;
-        flex-direction: column;
-        margin: 0 auto;
     }
 
     /* .show li {
