@@ -194,6 +194,13 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
         display: flex;
     }
 
+    .nav-links li {
+        display: block;
+        width: 100%;
+        padding: 1rem 0;
+        text-align: center;
+    }
+
     .nav-div a {
         text-decoration: none;
         width: 100%;
@@ -223,10 +230,6 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
         flex-direction: column;
         margin: 0 auto;
     }
-
-    /* .nav-links li {
-        display: none;
-    } */
 
     .nav-links a {
         display: none;
