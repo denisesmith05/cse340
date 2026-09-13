@@ -148,6 +148,19 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
         align-items: center;
     }
 
+    /* Hamburger button */
+
+   #menu {
+        display: block;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        /* padding-bottom: 1.5rem; */
+        text-decoration: none;
+        cursor: pointer;
+    }
+
     #menu.show::before {
         content: "X";
         text-decoration: none;
@@ -160,12 +173,6 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
         width: 100%;
     }
 
-    #menu {
-        position: absolute;
-        top: 1rem;
-        left: 1.5rem;
-        padding-bottom: 1.5rem;
-    }
     #menu::before {
         content: "≡";
         text-decoration: none;
