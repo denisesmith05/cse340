@@ -38,7 +38,7 @@ header {
 }
 
 .nav-links a {
-    position: relative;
+    /* position: relative; */
 
     color: #ffffff;
     font-size: 1.5rem;
