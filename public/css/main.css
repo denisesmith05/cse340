@@ -168,11 +168,12 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
         color: white;
     }
 
+    /*Change the hamburger icon to an "X" when the menu is open*/
     #menu.show::before {
         content: "X";
-        text-decoration: none;
+        /* text-decoration: none;
         font-size: 1.5rem;
-        color: white;
+        color: white; */
     }
 
     .nav-div a {
