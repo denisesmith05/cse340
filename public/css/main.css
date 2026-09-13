@@ -161,6 +161,13 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
         cursor: pointer;
     }
 
+    #menu::before {
+        content: "≡";
+        /* text-decoration: none; */
+        font-size: 1.8rem;
+        color: white;
+    }
+
     #menu.show::before {
         content: "X";
         text-decoration: none;
@@ -171,13 +178,6 @@ box-shadow: 0 20px 50px rgba(23, 36, 58, 0.2);
     .nav-div a {
         text-decoration: none;
         width: 100%;
-    }
-
-    #menu::before {
-        content: "≡";
-        text-decoration: none;
-        font-size: 1.5rem;
-        color: white;
     }
 
     #menu:hover {
