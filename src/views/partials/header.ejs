@@ -24,7 +24,11 @@
     <script> 
             const hamburger = document.querySelector("#menu"); 
             const navLinks = document.querySelector(".nav-links"); 
-            hamburger.addEventListener("click", () => { navLinks.classList.toggle("show"); 
-            hamburger.classList.toggle("show"); }); 
+            hamburger.addEventListener("click", (event) => { 
+                event.preventDefault();
+            
+                navLinks.classList.toggle("show"); 
+                hamburger.classList.toggle("show"); 
+            }); 
     </script>
 </body>
