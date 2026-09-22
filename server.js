@@ -50,8 +50,9 @@ app.get('/categories', async (req, res) => {
     res.render('categories', { title });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     try {
+        await testConnection();
         console.log(`Server is running at http://127.0.0.1:${PORT}`);
         console.log(`Environment: ${NODE_ENV}`);
     } catch (error) {
