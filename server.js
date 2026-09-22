@@ -29,6 +29,7 @@ app.set('view engine', 'ejs');
 
 // Tell Express where to find your templates
 app.set('views', path.join(__dirname, 'src/views'));
+
 /**
   * Routes
   */
@@ -37,10 +38,15 @@ app.get('/', async (req, res) => {
     res.render('home', { title });
 });
 
+
 app.get('/organizations', async (req, res) => {
+    const organizations = await getAllOrganizations();
+    console.log('Organiztions', organizations); //Log the retrieved organizations
+      
     const title = 'Organizations';
     res.render('organizations', { title });
 });
+
 
 app.get('/projects', async (req, res) => {
     const title = 'Projects';
@@ -51,15 +57,6 @@ app.get('/categories', async (req, res) => {
     const title = 'Categories';
     res.render('categories', { title });
 });
-
-app.get('/organizations', async (req, res) => {
-    const organizations = await getAllOrganizations();
-    console.log(organizations);
-      
-    const title = 'Our Partner Organizations';
-    res.render('organizations', { title });
-});
-
 
 app.listen(PORT, async () => {
     try {
