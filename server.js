@@ -50,9 +50,11 @@ app.get('/organizations', async (req, res) => {
 
 app.get('/projects', async (req, res) => {
     const projects = await getAllProjects();
-    const title = 'Projects';
     
-    res.render('projects', { title, projects });
+    res.render('projects', {
+        title: 'Service Projects',
+        projects
+    });
 });
 
 app.get('/categories', async (req, res) => {
