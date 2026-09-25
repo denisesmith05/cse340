@@ -1,4 +1,6 @@
-// W02
+-- W02
+
+-- organizations.sql
 
 CREATE TABLE organization (
     organization_id SERIAL PRIMARY KEY,
@@ -20,6 +22,7 @@ CREATE TABLE project (
 	FOREIGN KEY (organization_id) REFERENCES organization(organization_id)
 );
 
+-- projects.sql
 
 CREATE TABLE project (
 	project_id SERIAL PRIMARY KEY,
@@ -98,3 +101,71 @@ VALUES
      'Provo, Utah', '2026-11-02');
 
 SELECT * FROM project;
+
+-- categories.sql
+
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+INSERT INTO category (name)
+VALUES
+    ('Environment'),
+    ('Education'),
+    ('Community');
+
+-- To avoid category duplicates 
+DELETE FROM category a
+USING category b
+WHERE a.category_id > b.category_id
+AND a.name = b.name;
+
+SELECT*FROM category;
+
+
+CREATE TABLE project_category (
+    project_id INT NOT NULL,
+    category_id INT NOT NULL,
+	
+    
+    PRIMARY KEY (project_id, category_id),
+    FOREIGN KEY (project_id) REFERENCES project(project_id),
+    FOREIGN KEY (category_id) REFERENCES category(category_id)
+);
+
+INSERT INTO project_category (project_id, category_id)
+VALUES
+    -- Community
+    (1, 3),   -- Community Playground Build
+    (2, 3),   -- Neighborhood Home Repair
+    (4, 3),   -- Senior Home Improvement Day
+    (5, 3),   -- Park Bench Restoration
+    (11, 3),  -- Food Drive
+    (12, 3),  -- Senior Center Volunteer Day
+    (13, 3),  -- Homeless Shelter Meal Service
+    (14, 3),  -- Community Clothing Drive
+    (15, 3),  -- Neighborhood Cleanup
+
+    -- Environment
+    (3, 1),   -- Community Garden Construction
+    (6, 1),   -- Community Garden Cleanup
+    (8, 1),   -- Tree Planting Project
+    (9, 1),   -- Urban Garden Workshop
+    (10, 1),  -- Neighborhood Beautification
+    (15, 1),  -- Neighborhood Cleanup
+
+    -- Education
+    (9, 2);   -- Urban Garden Workshop
+
+SELECT 
+    project.title,
+    category.name
+FROM project_category
+JOIN project
+    ON project_category.project_id = project.project_id
+JOIN category
+    ON project_category.category_id = category.category_id
+ORDER BY category.name, project.title;
+	
+SELECT*FROM project_category;
