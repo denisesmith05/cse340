@@ -77,6 +77,13 @@ app.get('/categories', async (req, res) => {
     res.render('categories', { title, categories });
 });
 
+// Test route for 500 errors
+app.get('/test-error', (req, res, next) => {
+    const err = new Error('This is a test error');
+    err.status = 500;
+    next(err);
+});
+
 // Catch-all route for 404 errors
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
@@ -103,13 +110,6 @@ app.use((err, req, res, next) => {
     
     // Render the appropriate error template
     res.status(status).render(`errors/${template}`, context);
-});
-
-// Test route for 500 errors
-app.get('/test-error', (req, res, next) => {
-    const err = new Error('This is a test error');
-    err.status = 500;
-    next(err);
 });
 
 app.listen(PORT, async () => {
