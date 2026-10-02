@@ -1,0 +1,99 @@
+Exactly, Denise! 🎉 You have the main idea.
+
+A small refinement: $1 is a placeholder for whatever value is in the first item of queryParams. So with:
+
+const queryParams = [organizationId];
+
+if organizationId is 7, then $1 receives 7.
+
+And yes, keeping the value separate from the SQL string is an important part of preventing SQL injection. PostgreSQL treats the supplied value as data rather than as part of the SQL command.
+
+You can think of the three pieces as:
+
+SQL query        → "WHERE organization_id = $1"
+                         ↓
+queryParams      → [7]
+                         ↓
+database         → WHERE organization_id = 7
+
+Now let's connect this directly to your Week 03 Models requirement.
+
+Question: In your own words, what do you think would be different if we wrote the organizationId directly inside the SQL string instead of using $1 and queryParams?
+
+I think it would be more tedious for the developer to have to manually change the value each time, instead of just putting $1 so that queryParams value can automatically change to whatever value required
+
+Yes, Denise — that is another important reason we use $1. You correctly recognized that the same model function can work with different IDs without rewriting the SQL.
+
+For example, you could call your function with different organizations:
+
+getProjectsByOrganizationId(1);
+getProjectsByOrganizationId(7);
+getProjectsByOrganizationId(15);
+
+The SQL itself stays exactly the same. The value in queryParams changes.
+
+There is one additional idea I want you to understand: the security benefit is actually more important than the convenience benefit. Parameterized queries tell the database, essentially, “this is data that I'm giving you; don't interpret it as SQL code.”
+
+So you've now identified two benefits:
+
+Reusable — the same query works for different IDs.
+Safer — the ID is passed separately from the SQL command, helping prevent SQL injection.
+
+Let's move into the required Models discussion.
+
+Question: Please paste another non-trivial function from one of your model .js files that uses a parameter in an SQL query.
+
+const getOrganizationDetails = async (organizationId) => {
+      const query = 
+      SELECT
+        organization_id,
+        name,
+        description,
+        contact_email,
+        logo_filename
+      FROM organization
+      WHERE organization_id = $1;
+    ;
+
+      const queryParams = [organizationId];
+      const result = await db.query(query, queryParams);
+
+      // Return the first row of the result set, or null if no rows are found
+      return result.rows.length > 0 ? result.rows[0] : null;
+};
+
+Great, Denise. This is a good example because it does a little more than just run the query.
+
+Here's what your function is doing in plain English:
+
+Accepts an organization ID
+
+const getOrganizationDetails = async (organizationId) => {
+
+The function receives an ID, such as 7.
+
+Builds the SQL query
+
+WHERE organization_id = $1;
+
+$1 is the placeholder for that ID.
+
+Provides the actual value
+
+const queryParams = [organizationId];
+
+Runs the query
+
+const result = await db.query(query, queryParams);
+
+Returns the organization
+
+return result.rows.length > 0 ? result.rows[0] : null;
+
+This is the particularly interesting part. If the database found an organization, you return the first row. If it didn't find one, you return null.
+
+So conceptually:
+
+ID → SQL query → database → results → one organization OR null
+
+Question: Why do you think this function returns result.rows[0] when a result exists, instead of returning result.rows?

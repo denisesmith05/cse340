@@ -1,0 +1,278 @@
+Week 01 Coaching Session Transcript
+
+User: 1.
+
+[User provided the Week 01 Coaching Session Prompt, including the role instructions, single-question rule, four required topics (Express Routing, JavaScript Language Principles, EJS Partials and Pages, Frontend CSS), and the transcript requirement.]
+
+Assistant:
+Welcome! Just to be clear from the start, this is a coaching session, not a test. It is perfectly okay—and even encouraged—to say 'I don't know' or 'I made a mistake.' That's the fastest way we'll learn today.
+
+I’m your supportive, non-judgmental Learning Coach and Software Mentor for this session. We’ll work through your assignment together, and I’ll help you understand the choices you made rather than simply giving you answers.
+
+First, what name would you like me to use for you during our coaching session?
+
+User:
+Denise
+
+Assistant:
+Thanks, Denise! 😊 We’ll take this one step at a time, and remember that this is a safe space to think out loud, make mistakes, and say “I don’t know.”
+
+Let’s start with Topic 1: Express Routing.
+
+Since we’re working in a chat interface, please paste the relevant server.js code snippet that shows your Express routing so we can discuss what it does and why you chose that approach.
+
+User:
+import express from 'express';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+//Define the application environment
+const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
+
+//Define the port number the server will listen on
+const PORT = process.env.PORT || 3000;
+
+//Define the __filename and __dirname variables for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const app = express();
+
+/**
+  * Configure Express middleware
+  */
+
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Set EJS as the templating engine
+app.set('view engine', 'ejs');
+
+// Tell Express where to find your templates
+app.set('views', path.join(__dirname, 'src/views'));
+/**
+  * Routes
+  */
+app.get('/', async (req, res) => {
+    const title = 'Home';
+    res.render('home', { title });
+});
+
+app.get('/organizations', async (req, res) => {
+    const title = 'Organizations';
+    res.render('organizations', { title });
+});
+
+app.get('/projects', async (req, res) => {
+    const title = 'Projects';
+    res.render('projects', { title });
+});
+
+app.get('/categories', async (req, res) => {
+    const title = 'Categories';
+    res.render('categories', { title });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running at http://127.0.0.1:${PORT}`);
+  console.log(`Environment: ${NODE_ENV}`);
+});
+
+Assistant:
+Great, Denise. This is a good snippet to discuss because it shows several important pieces of Express routing.
+
+Looking specifically at your route for `/organizations`, what happens when a user visits `/organizations`, and what is the purpose of `res.render('organizations', { title })`?
+
+User:
+the purpose of res.render('organizations', {title}) if to identify and run the functions of the organizations.ejs file on your web server
+
+Assistant:
+You're on the right track, Denise. `res.render()` tells Express to render an EJS template and send the resulting HTML back to the browser. The `{ title }` part provides data that the EJS file can use.
+
+Let's stay with Express routing for one more step: why do you think you used `app.get('/organizations', ...)` for this page instead of just creating a link to `organizations.ejs` directly?
+
+User:
+i think that would just be more complicated because then you would have created a whole link for every ejs page, while app.get('/organizations') is just more direct and clean cut. also, i don't think you would be able to run a link and have it work on every platform
+
+Assistant:
+That's a thoughtful explanation, Denise. 👍 You correctly recognize that Express routes provide a clean way to connect a URL to a server-side action, rather than exposing your EJS files directly.
+
+One small clarification: the main reason isn't really that links wouldn't work on every platform—it's that EJS templates are meant to be rendered by the server, and the Express route determines which template should be rendered when that URL is requested.
+
+How would you explain the difference between the URL `/organizations` and the EJS file `organizations.ejs` in your own words?
+
+User:
+I would say the /organizations is the pathway/route to get to the destination you want to go, while organizations.ejs is like the actual file. It's like organizations.ejs is the destination, while /organizations is the way to get there, so the organizations page can be displayed and functional through the web server
+
+Assistant:
+Exactly, Denise—that’s a useful way to think about it: `/organizations` is the route the browser requests, and `organizations.ejs` is the template Express renders in response. Your analogy of the route being the path and the EJS file being the destination works well.
+
+That gives us a solid understanding of Topic 1: Express Routing.
+
+Now let's move to Topic 2: JavaScript Language Principles. Since we're in a chat interface, please paste a non-trivial JavaScript function from your assignment that you'd like us to discuss.
+
+User:
+app.use(express.static(path.join(__dirname, 'public')));
+
+Assistant:
+Good choice, Denise. This is a useful line because it demonstrates JavaScript functions being combined together:
+
+`path.join()` creates the path to your `public` directory, and `express.static()` tells Express to serve the files in that directory as static files.
+
+What do you think `path.join(__dirname, 'public')` is doing in this line, and why is it useful to pass its result into `express.static()`?
+
+User:
+I think the path.join(_dirname, 'public') in a way directs us to the public file and makes it possible to run everything in that file on the web server, I need more clarification as to why it's useful to pass it to express.static()
+
+Assistant:
+You're very close. Think of the two parts as having different jobs:
+
+- `path.join(__dirname, 'public')` builds the actual filesystem path to your `public` folder.
+- `express.static(...)` tells Express, "serve files from this folder directly to the browser when they're requested."
+
+So passing the path into `express.static()` connects the location of your files with Express's ability to serve them. This is commonly how things like your CSS, JavaScript, and images become available to your web pages.
+
+What is one type of file in your `public` folder that Express needs `express.static()` to serve to the browser?
+
+User:
+main.css
+
+Assistant:
+Exactly! `main.css` is a great example. When your page requests that stylesheet, `express.static()` allows Express to find and send the file from the `public` folder to the browser.
+
+We’ve discussed an important JavaScript concept here—using functions together to accomplish a task—but I’d also like to look at an actual function from your assignment so we can fully cover the JavaScript principles topic.
+
+Please paste one JavaScript function from your assignment that you wrote (preferably one that does more than a single simple action).
+
+User:
+const __filename = fileURLToPath(import.meta.url);
+
+Assistant:
+Good, Denise. This is another useful JavaScript example, especially because you're using a function with a value returned from another expression.
+
+Here, `import.meta.url` provides the URL of the current module, and `fileURLToPath()` converts that URL into a file-system path that Node.js can work with. The result is stored in the `__filename` constant.
+
+Why do you think your code needs to convert `import.meta.url` into a file-system path before using it elsewhere in your program?
+
+User:
+i think it is because that is how other scripts, images, files are accessed in code; and i think that because it because a file-system path is more clear and concise and cannot become invalidated at any point such as a normal URL can
+
+Assistant:
+That's a good connection, Denise. You correctly identified that Node needs a file-system path when it is working with files and directories on the server.
+
+One clarification: the main reason for the conversion isn't that file paths are less likely to become invalid than URLs. It's because `import.meta.url` is a URL, while Node's file-system and path operations expect a file-system path. Converting between those formats lets the two systems work together.
+
+That completes our discussion of Topic 2: JavaScript Language Principles.
+
+Now let's move to Topic 3: EJS Partials and Pages. Since we're in a chat interface, please paste a non-trivial EJS snippet from one of your EJS pages or partials that you'd like to discuss.
+
+User:
+*<*%- include('partials/header') %>
+
+    <main>
+
+        <h1>*<*%= title %></h1>
+
+        <h2>Welcome to the CSE 340 Service Network!</h2>
+
+        <p>Our mission is to promote service across the world by connecting volunteers with service opportunities in their community.</p>
+
+        <img class="main-logo" src="images/cse340-service-network.png" alt="CSE 340 Service Network Logo">
+
+    </main>
+
+*<*%- include('partials/footer') %>
+
+Assistant:
+Great, Denise. This snippet shows both an EJS page and how that page uses partials.
+
+Your `include()` statements pull in reusable pieces—your header and footer—while `<%= title %>` displays the `title` value that your Express route passed to the template.
+
+Why do you think using a header and footer partial is useful instead of writing the same header and footer HTML separately in every EJS page?
+
+User:
+that just makes it so much simpler and efficient! that issures that there will not be any little mistakes on one page of the site
+
+Assistant:
+Exactly, Denise. You identified two major benefits: efficiency and consistency. If you need to change something in the header later, you can change the partial once instead of editing every page individually. It also reduces the chance of small differences or mistakes between pages.
+
+Now let's look at the other important part of your EJS snippet: `<%= title %>`.
+
+Where does the `title` value come from in your `server.js`, and how does it get from the route into your EJS page?
+
+User:
+the title value comes from my server.js page and in my app.get module, where i am my page headers as the value for the variable 'title'. it get from the route into the ejs page by way of a partial snippet. ex: <h1>*<*%= title %></h1>
+
+Assistant:
+You're very close, Denise. You correctly identified that the route creates the `title` value and that `<%= title %>` displays it in the EJS page.
+
+One important clarification: the partial isn't what sends the `title` from `server.js` to the page. The route does that through the object passed to `res.render()`:
+
+`res.render('home', { title });`
+
+EJS then makes that value available to the template, where `<%= title %>` displays it.
+
+That completes Topic 3: EJS Partials and Pages.
+
+Now let's move to Topic 4: Frontend CSS. Since we're working in chat, please paste a non-trivial CSS snippet from your assignment that you'd like to discuss.
+
+User:
+/* Hamburger button */
+   #menu {
+        display: block;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    #menu::before {
+        content: "≡";
+        font-size: 1.8rem;
+        color: white;
+    }
+
+    /*Change the hamburger icon to an "X" when the menu is open*/
+    #menu.show::before {
+        content: "X";
+    }
+
+Assistant:
+Nice choice, Denise. This is a good example of CSS controlling both positioning and visual state. Your `#menu` selector positions the hamburger button, while `#menu::before` uses a pseudo-element to create the hamburger symbol. Then `#menu.show::before` changes that symbol to an "X" when the `show` class is present.
+
+Why do you think you used `#menu::before` to create the hamburger icon instead of putting the "≡" directly into your HTML?
+
+User:
+if i put the hamburger sign straight into my html, it wouldn't do it's rightful function of expanding and closing the hamburger, because it is not being manipulated
+
+Assistant:
+You're thinking about the interaction correctly, Denise. The important distinction is that the JavaScript changes the `show` class, and your CSS responds to that class by changing the icon from `≡` to `X`. The pseudo-element gives CSS control over that visual representation.
+
+So the HTML could technically contain the symbol and still be manipulated, but your approach keeps the visual icon controlled by CSS, which makes the styling/state change clean and easy to manage.
+
+That completes all four required topics:
+
+1. Express Routing
+2. JavaScript Language Principles
+3. EJS Partials and Pages
+4. Frontend CSS
+
+Before we finish, let's reflect on the whole assignment with one final prompt:
+
+What is one concept from today's coaching session that you understand better now than you did before we started?
+
+User:
+I understand a lot more about how the 'title' function works and also how my JS syntax makes the my all of my other files and scripts work together to make a functional site
+
+Assistant:
+That's a great takeaway, Denise. You connected several pieces that can otherwise feel separate: Express routes pass data to EJS, EJS builds the pages, JavaScript provides behavior, and CSS controls presentation and visual state. You also clarified that `title` is a value being passed into the EJS template, rather than a function.
+
+You completed the coaching discussion for all four required topics.
+
+User:
+Perfect, please create the .txt file
+
+Assistant:
+Transcript file created from the complete coaching session.
