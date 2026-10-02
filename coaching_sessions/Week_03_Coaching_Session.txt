@@ -1,3 +1,49 @@
+i would like to start by understanding why we have to put $1 for ids in sql queries in out model js files. for example const getProjectsByOrganizationId = async (organizationId) => {
+      const query = 
+        SELECT
+          project_id,
+          organization_id,
+          title,
+          description,
+          location,
+          date
+        FROM project
+        WHERE organization_id = $1
+        ORDER BY date;
+      ;
+      
+      const queryParams = [organizationId];
+      const result = await db.query(query, queryParams);
+
+      return result.rows;
+};
+
+Great question, Denise. This is actually an important concept because $1 can look mysterious when you first see it.
+
+In your example, $1 is a placeholder for a value that you want to safely put into the SQL query.
+
+Think of it like a blank in a sentence:
+
+WHERE organization_id = _____
+
+Your JavaScript supplies the value for that blank:
+
+const queryParams = [organizationId];
+
+So if organizationId were 3, PostgreSQL would effectively use 3 where $1 is.
+
+The important part is that you don't directly put the JavaScript variable inside the SQL string. Instead, you give the value separately to:
+
+db.query(query, queryParams);
+
+This is called a parameterized query, and one major reason we use it is to help protect against SQL injection.
+
+For your coaching question, let's focus on the basic idea first:
+
+If organizationId is 7, what value do you think $1 represents in this query?
+
+If i understand correctly, $1 would just be the placeholder for the ID 7, so that the id does not have to be directly inputed in the code, to avoid sql injection
+
 Exactly, Denise! 🎉 You have the main idea.
 
 A small refinement: $1 is a placeholder for whatever value is in the first item of queryParams. So with:
@@ -97,3 +143,262 @@ So conceptually:
 ID → SQL query → database → results → one organization OR null
 
 Question: Why do you think this function returns result.rows[0] when a result exists, instead of returning result.rows?
+
+im not sure, but my guess is that because 0 is the first indexing item in the array and we just want the first row [0]  in the result
+
+Exactly, Denise! That's correct. 🎉
+
+result.rows is an array of rows returned by the database. JavaScript arrays start counting at 0, so:
+
+result.rows[0]
+
+means “give me the first row.”
+
+And because this query is looking for an organization with one specific organization_id, we expect either:
+
+One matching organization → return result.rows[0]
+No matching organization → return null
+
+So your reasoning is right.
+
+That completes our main discussion of Models: you've explained how a parameterized SQL query works, why $1 is used, how queryParams supplies its value, and how the model processes the database result.
+
+Now let's move to Topic 2: Views.
+
+Question: Please paste a non-trivial EJS snippet from one of your view files where you insert database data into a link.
+
+Perfect, Denise. This is exactly the kind of EJS code we're looking for.
+
+The most important part for our discussion is:
+
+<a href="/organization/<%= organization.organization_id %>">
+    <%= organization.name %>
+</a>
+
+Here's what's happening:
+
+organization.organization_id gets the ID from the database.
+<%= ... %> tells EJS, “put this JavaScript value into the HTML.”
+That value gets inserted into the URL.
+So if the organization ID is 7, the link becomes:
+<a href="/organization/7">Organization Name</a>
+
+This means each organization in your list gets its own link containing its own ID.
+
+Your forEach is also important:
+
+<% organizations.forEach(organization => { %>
+
+It says, essentially, “for every organization in the organizations array, create this piece of HTML.”
+
+So if you had three organizations, EJS would generate three links, each containing the appropriate organization's ID.
+
+Question: In your own words, what is the purpose of putting organization.organization_id inside the href rather than just linking every organization to /organization?
+
+I think that it's useful to put that inside the href because it makes it more simple and minimizes the chance of errors because the organization id will be produced from the array, rather than having to manually input every item with /organization at the end
+
+Yes, Denise — that's a good understanding. 👍
+
+The key idea is that the ID makes the link specific to the organization the user clicked.
+
+For example:
+
+/organization/1
+/organization/2
+/organization/3
+
+Each URL tells your application which organization the user wants to see. And because you're looping through organizations, you don't have to manually create each link.
+
+There's also a nice connection to what we just learned about $1:
+
+View:
+
+organization.organization_id
+        ↓
+/organization/7
+        ↓
+Controller receives 7
+        ↓
+Model uses 7 as $1
+        ↓
+Database finds organization 7
+
+That is how your View → Controller → Model → Database pieces work together.
+
+Now let's move to Topic 3: Controllers.
+
+Question: Please paste a controller route handler from your project that contains a route parameter, such as something like :organizationId in the URL.
+
+import { getUpcomingProjects, getProjectDetails,  } from "../models/projects.js";
+import { getCategoriesByProjectId } from '../models/categories.js';
+
+const NUMBER_OF_UPCOMING_PROJECTS = 5;
+
+const showProjectsPage = async (req, res) => {
+    const projects = await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS);
+    const title = "Upcoming Service Projects";
+
+    res.render("projects", { title, projects });
+};
+
+const showProjectDetailsPage = async (req, res) => {
+    const projectId = req.params.id;
+    const project = await getProjectDetails(projectId);
+    const categories = await getCategoriesByProjectId(projectId);
+    const title = 'Project Details';
+
+    res.render('project', { title, project, categories });
+};
+
+export { showProjectsPage, showProjectDetailsPage };
+
+Nice, Denise. This gives us a clear example of a controller connecting the URL → model → view.
+
+The key line is:
+
+const projectId = req.params.id;
+
+If your route is something like:
+
+/project/15
+
+and the route is defined with :id, then Express puts 15 into req.params.id.
+
+Your controller then passes that ID to both models:
+
+const project = await getProjectDetails(projectId);
+const categories = await getCategoriesByProjectId(projectId);
+
+So the flow is:
+
+URL → req.params.id → projectId → models → database → EJS view
+
+And then:
+
+res.render('project', { title, project, categories });
+
+sends the retrieved information to your project EJS view.
+
+One thing to notice: the :id route parameter itself isn't shown in the code you pasted. This file contains the handler, but the actual route definition is probably in another controller/router file.
+
+Question: Please paste the route definition that connects a URL containing :id to showProjectDetailsPage.
+
+router.get('/project/:id', showProjectDetailsPage);
+
+Exactly. This completes the missing piece, Denise.
+
+router.get('/project/:id', showProjectDetailsPage);
+
+Here, :id is a route parameter. Express uses it as a placeholder for whatever ID appears in the URL.
+
+For example, if the user clicks:
+
+/project/15
+
+Express essentially says:
+
+“The value that appeared where :id is should be available as req.params.id.”
+
+So your controller gets:
+
+const projectId = req.params.id;
+
+which gives you 15.
+
+Then your model can use that value in its SQL query.
+
+The complete chain
+/project/15
+     ↓
+:id = 15
+     ↓
+req.params.id
+     ↓
+projectId = 15
+     ↓
+getProjectDetails(15)
+     ↓
+SQL uses 15 as $1
+     ↓
+Database returns project 15
+     ↓
+res.render('project', ...)
+
+That's a really important pattern in Express applications: the controller takes information from the HTTP request and coordinates what the model and view should do with it.
+
+That covers our required discussion of Controllers.
+
+Now let's move to our final required topic: Error Handling.
+
+Question: Please paste the code you use in your project to handle a 404 or 500 error.
+
+<%- include('../partials/header') %>
+
+<main>
+
+\<h1>Page Not Found\</h1>
+
+\<p>The page you are looking for does not exist.\</p>
+
+\<p>Return to the \<a href="/">homepage\</a> to continue browsing.\</p>
+
+</main>
+
+<%- include('../partials/footer') %> for 404 error and <%- include('../partials/header') %>
+
+<main>
+
+\<h1>Something Went Wrong\</h1>
+
+\<p>We are experiencing technical difficulties. Our team has been notified and is working to fix the issue.\</p>
+
+\<p>Return to the \<a href="/">homepage\</a> to continue browsing.\</p>
+
+<% if (NODE_ENV === 'development') { %>
+
+    \<details open>
+
+        \<summary>Error Details (Development Only)\</summary>
+
+        \<pre>*<*%= error %>\</pre>
+
+        \<pre>*<*%= stack %>\</pre>
+
+    \</details>
+
+<% } %>
+
+</main>
+
+<%- include('../partials/footer') %> as 500 error
+
+Good, Denise. These are your error pages, and they show that you've thought about both the user's experience and the developer's needs.
+
+Your 404 page communicates that the requested page doesn't exist and gives the user a way to get back to the homepage.
+
+Your 500 page does something especially useful:
+
+<% if (NODE_ENV === 'development') { %>
+
+It only displays the technical error details when you're working in development mode. That means you can see useful debugging information while developing without unnecessarily exposing those details to normal users in production.
+
+One distinction I'd like you to think about is that these EJS files are the pages the user sees, while some other piece of your application is responsible for deciding when to send a 404 or 500 response.
+
+Question: In your own words, why do you think it's useful to show the detailed error and stack information in development but hide it from users in production?
+
+i think it makes it just makes it look cleaner for the user
+
+Yes, that's part of it! A clean, understandable error page is much better for a regular user than showing them a bunch of confusing technical information.
+
+There's also a security reason: an error stack can reveal information about how your application is built, including file names, code paths, and other implementation details that ordinary users don't need to see.
+
+So your strategy is essentially:
+
+Development: show technical details → helps the developer find and fix the problem.
+Production: hide technical details → gives the user a simple message and avoids exposing unnecessary application information.
+
+We've now discussed all four required areas: Models, Views, Controllers, and Error Handling. 🎉
+
+Final coaching question: Looking back at everything we've discussed, what is one concept from this Week 03 assignment that you understand better now than you did when we started?
+
+I understand a lot better  why we use $1 as an item value and why it is so useful for indexing data arrays that display on my webpage!
