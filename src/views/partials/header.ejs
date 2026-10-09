@@ -21,6 +21,17 @@
         </div>
     </header>
 
+    <% const messages = flash(); %>
+    <% Object.keys(messages).forEach(type => { %>
+        <% if (messages[type].length > 0) { %>
+            
+                <% messages[type].forEach(msg => { %>
+                    <%= msg %>
+                <% }); %>
+            
+        <% } %>
+    <% }); %>
+
     <script> 
             const hamburger = document.querySelector("#menu"); 
             const navLinks = document.querySelector(".nav-links"); 
