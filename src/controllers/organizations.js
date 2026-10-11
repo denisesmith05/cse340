@@ -34,7 +34,7 @@ const processNewOrganizationForm = async (req, res) => {
     // Set a success flash message
     req.flash('success', 'Organization added successfully!');
 
-    res.redirect('/organization/${organizationId}');
+    res.redirect(`/organization/${organizationId}`);
 };
 
 export { showOrganizationsPage, showOrganizationDetailsPage, showNewOrganizationForm, processNewOrganizationForm };
