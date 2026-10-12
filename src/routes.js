@@ -1,5 +1,5 @@
 import express from 'express';
-import { showOrganizationDetailsPage, showNewOrganizationForm, processNewOrganizationForm, organizationValidation} from './controllers/organizations.js';
+import { organizationValidation, processNewOrganizationForm, showOrganizationDetailsPage, showNewOrganizationForm } from './controllers/organizations.js';
 import { showHomePage } from './controllers/index.js';
 import { showOrganizationsPage } from './controllers/organizations.js';
 import { showCategoriesPage, showCategoryDetailsPage } from './controllers/categories.js';
