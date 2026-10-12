@@ -1,12 +1,10 @@
 import express from 'express';
-import { showOrganizationDetailsPage } from './controllers/organizations.js';
+import { showOrganizationDetailsPage, showNewOrganizationForm, processNewOrganizationForm, organizationValidation} from './controllers/organizations.js';
 import { showHomePage } from './controllers/index.js';
 import { showOrganizationsPage } from './controllers/organizations.js';
 import { showCategoriesPage, showCategoryDetailsPage } from './controllers/categories.js';
 import { testErrorPage } from './controllers/errors.js';
 import { showProjectsPage, showProjectDetailsPage } from './controllers/projects.js';
-import { showNewOrganizationForm } from './controllers/organizations.js';
-import { processNewOrganizationForm } from './controllers/organizations.js';
 
 const router = express.Router();
 
