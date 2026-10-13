@@ -9,9 +9,13 @@
         type="text"
         id="title"
         name="title"
+        value="<%= formData.title || '' %>"
         maxlength="150"
         required
       />
+      <% if (errors.title) { %>
+        <p class="error"><%= errors.title.msg %></p>
+      <% } %>
     </div>
 
     <div class="form-group">
