@@ -1,7 +1,6 @@
 import { body, validationResult } from 'express-validator';
-import { getAllOrganizations, getOrganizationDetails } from '../models/organizations.js';
+import { createOrganization, getAllOrganizations, getOrganizationDetails } from '../models/organizations.js';
 import { getProjectsByOrganizationId } from '../models/projects.js';
-import { createOrganization } from '../models/organizations.js';
 
 // Define validation and sanitization rules for organization form
 // Define validation rules for organization form
@@ -70,4 +69,4 @@ const processNewOrganizationForm = async (req, res) => {
     res.redirect(`/organization/${organizationId}`);
 };
 
-export { showOrganizationsPage, showOrganizationDetailsPage, showNewOrganizationForm, processNewOrganizationForm, organizationValidation};
+export { organizationValidation, showNewOrganizationForm, processNewOrganizationForm, showOrganizationsPage, showOrganizationDetailsPage };
