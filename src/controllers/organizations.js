@@ -69,4 +69,12 @@ const processNewOrganizationForm = async (req, res) => {
     res.redirect(`/organization/${organizationId}`);
 };
 
-export { organizationValidation, showNewOrganizationForm, processNewOrganizationForm, showOrganizationsPage, showOrganizationDetailsPage };
+const showEditOrganizationForm = async (req, res) => {
+    const organizationId = req.params.id;
+    const organizationDetails = await getOrganizationDetails(organizationId);
+
+    const title = 'Edit Organization';
+    res.render('edit-organization', { title, organizationDetails });
+};
+
+export { organizationValidation, showNewOrganizationForm, processNewOrganizationForm, showOrganizationsPage, showOrganizationDetailsPage, showEditOrganizationForm };
