@@ -83,6 +83,18 @@ const processEditOrganizationForm = async (req, res) => {
 
     await updateOrganization(organizationId, name, description, contactEmail, logoFilename);
     
+    // Check for validation errors
+    const results = validationResult(req);
+    if (!results.isEmpty()) {
+        // Validation failed - loop through errors
+        results.array().forEach((error) => {
+            req.flash('error', error.msg);
+        });
+
+        // Redirect back to the edit organization form
+        return res.redirect('/edit-organization/' + req.params.id);
+    }
+
     // Set a success flash message
     req.flash('success', 'Organization updated successfully!');
 
