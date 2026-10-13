@@ -1,5 +1,5 @@
 import { body, validationResult } from 'express-validator';
-import { createOrganization, getAllOrganizations, getOrganizationDetails } from '../models/organizations.js';
+import { createOrganization, getAllOrganizations, getOrganizationDetails, updateOrganization } from '../models/organizations.js';
 import { getProjectsByOrganizationId } from '../models/projects.js';
 
 // Define validation and sanitization rules for organization form
@@ -77,4 +77,16 @@ const showEditOrganizationForm = async (req, res) => {
     res.render('edit-organization', { title, organizationDetails });
 };
 
-export { organizationValidation, showNewOrganizationForm, processNewOrganizationForm, showOrganizationsPage, showOrganizationDetailsPage, showEditOrganizationForm };
+const processEditOrganizationForm = async (req, res) => {
+    const organizationId = req.params.id;
+    const { name, description, contactEmail, logoFilename } = req.body;
+
+    await updateOrganization(organizationId, name, description, contactEmail, logoFilename);
+    
+    // Set a success flash message
+    req.flash('success', 'Organization updated successfully!');
+
+    res.redirect(`/organization/${organizationId}`);
+};
+
+export { organizationValidation, showNewOrganizationForm, processNewOrganizationForm, showOrganizationsPage, showOrganizationDetailsPage, showEditOrganizationForm, processEditOrganizationForm };
