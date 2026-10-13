@@ -3,7 +3,7 @@ import { showOrganizationsPage, organizationValidation, processNewOrganizationFo
 import { showHomePage } from './controllers/index.js';
 import { showCategoriesPage, showCategoryDetailsPage } from './controllers/categories.js';
 import { testErrorPage } from './controllers/errors.js';
-import { showProjectsPage, showProjectDetailsPage, showNewProjectForm, processNewProjectForm } from './controllers/projects.js';
+import { showProjectsPage, showProjectDetailsPage, showNewProjectForm, processNewProjectForm, projectValidation } from './controllers/projects.js';
 
 const router = express.Router();
 
@@ -27,7 +27,7 @@ router.post('/new-organization', organizationValidation, processNewOrganizationF
 // Route to handle the edit organization form submission
 router.post('/edit-organization/:id', processEditOrganizationForm);
 // Route to handle new project form submission
-router.post('/new-project', processNewProjectForm);
+router.post('/new-project', projectValidation, processNewProjectForm);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);
