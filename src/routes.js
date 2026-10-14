@@ -30,8 +30,8 @@ router.post('/edit-organization/:id', processEditOrganizationForm);
 router.post('/new-project', projectValidation, processNewProjectForm);
 
 // Routes to handle the assign categories to project form
-router.get('/project/:projectId', showAssignCategoriesForm);
-router.post('/project/:projectId', processAssignCategoriesForm);
+router.get('/project/:projectId/assign-categories', showAssignCategoriesForm);
+router.post('/project/:projectId/assign-categories', processAssignCategoriesForm);
 
 // error-handling routes
 router.get('/test-error', testErrorPage);

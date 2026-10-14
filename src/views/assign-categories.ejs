@@ -4,24 +4,24 @@
     <h2><%= title %></h2>
 
     <form action="/project/<%= projectId %>/assign-categories" method="POST">
-        <div class="form-group">
-            <% categories.forEach(category => { %>
-                <div>
-                    <input
-                        type="checkbox"
-                        id="category-<%= category.category_id %>"
-                        name="categoryIds"
-                        value="<%= category.category_id %>"
-                        <%= assignedCategories.some(
-                            assigned => String(assigned.category_id) === String(category.category_id)
-                        ) ? 'checked' : '' %>
-                    />
-                    <label for="category-<%= category.category_id %>">
-                        <%= category.name %>
-                    </label>
-                </div>
-            <% }) %>
-        </div>
+        <% categories.forEach(category => { %>
+            <div>
+                <input
+                    type="checkbox"
+                    id="category-<%= category.category_id %>"
+                    name="categoryIds"
+                    value="<%= category.category_id %>"
+                    <%= assignedCategories.some(
+                        assigned =>
+                            String(assigned.category_id) ===
+                            String(category.category_id)
+                    ) ? 'checked' : '' %>
+                />
+                <label for="category-<%= category.category_id %>">
+                    <%= category.name %>
+                </label>
+            </div>
+        <% }) %>
 
         <button type="submit">Update Categories</button>
     </form>

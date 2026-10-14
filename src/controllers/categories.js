@@ -25,27 +25,31 @@ const showCategoryDetailsPage = async (req, res) => {
 const showAssignCategoriesForm = async (req, res) => {
     const projectId = req.params.projectId;
     const projectDetails = await getProjectDetails(projectId);
-    const categories = await getAllCategories();
-    const assignedCategories = await getCategoriesByServiceProjectId(projectId);
-    const title = 'Assign Categories to Project';
 
-    res.render('assign-categories', { 
-        title, 
-        projectId, 
-        projectDetails, 
-        categories, 
-        assignedCategories 
+    if (!projectDetails) {
+        return res.status(404).render('errors/404', {
+            title: 'Page Not Found'
+        });
+    }
+
+    const categories = await getAllCategories();
+    const assignedCategories = await getCategoriesByProjectId(projectId);
+
+    res.render('assign-categories', {
+        title: 'Assign Categories to Project',
+        projectId,
+        projectDetails,
+        categories,
+        assignedCategories
     });
 };
 
 const processAssignCategoriesForm = async (req, res) => {
     const projectId = req.params.projectId;
-    const selectedCategoryIds = req.body.categoryIds || [];
-    
-    // Ensure selectedCategoryIds is an array
-    const categoryIds = Array.isArray(submittedCategoryIds) 
-        ? submittedCategoryIds
-        : [submittedCategoryIds];
+    const submitted = req.body.categoryIds || [];
+
+    // Ensures submitted is an array
+    const categoryIds = Array.isArray(submitted) ? submitted : [submitted];
 
     await updateCategoryAssignments(projectId, categoryIds);
     req.flash('success', 'Categories updated successfully.');
