@@ -1,6 +1,6 @@
 import { body, validationResult } from 'express-validator';
 import { getAllOrganizations } from '../models/organizations.js';
-import { createProject, getUpcomingProjects, getProjectDetails } from '../models/projects.js';
+import { createProject, getUpcomingProjects, getProjectDetails, updateProject } from '../models/projects.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
@@ -86,10 +86,60 @@ const showProjectDetailsPage = async (req, res) => {
     res.render('project', { title, project, categories });
 };
 
+const showEditProjectForm = async (req, res) => {
+    const projectId = req.params.id;
+    const project = await getProjectDetails(projectId);
+
+    if (!project) {
+        return res.sendStatus(404);
+    }
+
+    const organizations = await getAllOrganizations();
+
+    res.render('edit-project', {
+        title: 'Edit Project',
+        project,
+        organizations,
+        errors: {},
+        formData: {}
+    });
+};
+
+const processEditProjectForm = async (req, res) => {
+    const validation = validationResult(req);
+
+    if (!validation.isEmpty()) {
+        const project = await getProjectDetails(req.params.id);
+
+        if (!project) {
+            return res.sendStatus(404);
+        }
+
+        const organizations = await getAllOrganizations();
+
+        return res.status(400).render('edit-project', {
+            title: 'Edit Project',
+            project,
+            organizations,
+            errors: validation.mapped(),
+            formData: req.body
+        });
+    }
+
+    const { title, description, location, date, organizationId } = req.body;
+    const projectId = req.params.id;
+
+    await updateProject(projectId, title, description, location, date, organizationId);
+
+    return res.redirect(`/project/${projectId}`);
+};
+
 export {
     projectValidation,
     showProjectsPage,
     showNewProjectForm,
     processNewProjectForm,
-    showProjectDetailsPage
+    showProjectDetailsPage,
+    showEditProjectForm,
+    processEditProjectForm
 };
