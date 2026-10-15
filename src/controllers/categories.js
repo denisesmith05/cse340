@@ -53,6 +53,48 @@ const processNewCategoryForm = async (req, res) => {
     return res.redirect(`/category/${categoryId}`);
 };
 
+const showEditCategoryForm = async (req, res) => {
+    const category = await getCategoryById(req.params.id);
+
+    if (!category) {
+        return res.status(404).render('errors/404', {
+            title: 'Page Not Found'
+        });
+    }
+
+    return res.render('edit-category', {
+        title: 'Edit Category',
+        category,
+        errors: {},
+        formData: {}
+    });
+};
+
+const processEditCategoryForm = async (req, res) => {
+    const category = await getCategoryById(req.params.id);
+
+    if (!category) {
+        return res.status(404).render('errors/404', {
+            title: 'Page Not Found'
+        });
+    }
+
+    const validation = validationResult(req);
+
+    if (!validation.isEmpty()) {
+        return res.status(400).render('edit-category', {
+            title: 'Edit Category',
+            category,
+            errors: validation.mapped(),
+            formData: req.body
+        });
+    }
+
+    await updateCategory(category.category_id, req.body.name);
+    req.flash('success', 'Category updated successfully!');
+    return res.redirect(`/category/${category.category_id}`);
+};
+
 const showCategoryDetailsPage = async (req, res) => {
     const categoryId = req.params.id;
     const category = await getCategoryById(categoryId);
@@ -100,6 +142,8 @@ export {
     showCategoriesPage,
     showNewCategoryForm,
     processNewCategoryForm,
+    showEditCategoryForm,
+    processEditCategoryForm,
     showCategoryDetailsPage,
     showAssignCategoriesForm,
     processAssignCategoriesForm
