@@ -5,7 +5,8 @@ import {
     getCategoryById,
     getCategoriesByProjectId,
     getProjectsByCategoryId,
-    updateCategoryAssignments
+    updateCategoryAssignments,
+    updateCategory
 } from '../models/categories.js';
 import { getProjectDetails } from '../models/projects.js';
 
