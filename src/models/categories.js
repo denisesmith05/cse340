@@ -1,4 +1,4 @@
-import db from './db.js'
+import db from './db.js';
 
 const getAllCategories = async () => {
     const query = `
@@ -9,6 +9,22 @@ const getAllCategories = async () => {
 
     const result = await db.query(query);
     return result.rows;
+};
+
+const createCategory = async (name) => {
+    const query = `
+        INSERT INTO public.category (name)
+        VALUES ($1)
+        RETURNING category_id;
+    `;
+
+    const result = await db.query(query, [name]);
+
+    if (result.rows.length === 0) {
+        throw new Error('Failed to create category');
+    }
+
+    return result.rows[0].category_id;
 };
 
 const getCategoryById = async (id) => {
@@ -78,6 +94,7 @@ const updateCategoryAssignments = async (projectId, categoryIds) => {
 
 export {
     getAllCategories,
+    createCategory,
     getCategoryById,
     getCategoriesByProjectId,
     getProjectsByCategoryId,
