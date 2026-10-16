@@ -73,10 +73,11 @@ const requireLogin = (req, res, next) => {
     next();
 };
 
-module.exports = { showUserRegistrationForm, 
-                   processUserRegistrationForm, 
-                   showLoginForm, 
-                   processLoginForm, 
-                   processLogout,
-                   requireLogin 
-                };
+export {
+    showUserRegistrationForm,
+    processUserRegistrationForm,
+    showLoginForm,
+    processLoginForm,
+    processLogout,
+    requireLogin
+};
