@@ -115,6 +115,39 @@ p {
     line-height: 1.7;
 }
 
+.users-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #243552;
+    text-align: left;
+}
+
+.users-table caption {
+    margin-bottom: 1rem;
+    color: #68737d;
+    text-align: left;
+}
+
+.users-table th,
+.users-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #d9dee5;
+}
+
+.users-table th {
+    background-color: #17243a;
+    color: #ffffff;
+}
+
+.users-table tbody tr:nth-child(even) {
+    background-color: #f3f5f7;
+}
+
 .main-logo {
     width: 100%;
     max-width: 500px;
