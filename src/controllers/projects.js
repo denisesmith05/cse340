@@ -1,6 +1,14 @@
 import { body, validationResult } from 'express-validator';
 import { getAllOrganizations } from '../models/organizations.js';
-import { createProject, getUpcomingProjects, getProjectDetails, updateProject } from '../models/projects.js';
+import {
+    addProjectVolunteer,
+    createProject,
+    getUpcomingProjects,
+    getProjectDetails,
+    isProjectVolunteer,
+    removeProjectVolunteer,
+    updateProject
+} from '../models/projects.js';
 import { getCategoriesByProjectId } from '../models/categories.js';
 
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
@@ -80,10 +88,49 @@ const processNewProjectForm = async (req, res) => {
 const showProjectDetailsPage = async (req, res) => {
     const projectId = req.params.id;
     const project = await getProjectDetails(projectId);
+
+    if (!project) {
+        return res.sendStatus(404);
+    }
+
     const categories = await getCategoriesByProjectId(projectId);
+    const isVolunteer = req.session.user
+        ? await isProjectVolunteer(projectId, req.session.user.user_id)
+        : false;
     const title = 'Project Details';
 
-    res.render('project', { title, project, categories });
+    res.render('project', { title, project, categories, isVolunteer });
+};
+
+const processAddProjectVolunteer = async (req, res) => {
+    const projectId = req.params.projectId;
+    const project = await getProjectDetails(projectId);
+
+    if (!project) {
+        return res.sendStatus(404);
+    }
+
+    await addProjectVolunteer(projectId, req.session.user.user_id);
+    req.flash('success', 'You are now volunteering for this project.');
+    return res.redirect(`/project/${projectId}`);
+};
+
+const processRemoveProjectVolunteer = async (req, res) => {
+    const projectId = req.params.projectId;
+    const project = await getProjectDetails(projectId);
+
+    if (!project) {
+        return res.sendStatus(404);
+    }
+
+    await removeProjectVolunteer(projectId, req.session.user.user_id);
+    req.flash('success', 'You are no longer volunteering for this project.');
+
+    if (req.body.returnTo === 'dashboard') {
+        return res.redirect('/dashboard');
+    }
+
+    return res.redirect(`/project/${projectId}`);
 };
 
 const showEditProjectForm = async (req, res) => {
@@ -140,6 +187,8 @@ export {
     showNewProjectForm,
     processNewProjectForm,
     showProjectDetailsPage,
+    processAddProjectVolunteer,
+    processRemoveProjectVolunteer,
     showEditProjectForm,
     processEditProjectForm
 };
