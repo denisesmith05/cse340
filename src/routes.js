@@ -1,5 +1,4 @@
 import express from 'express';
-import { requireRole } from './middleware/requireRole.js';
 import {
     showOrganizationsPage,
     organizationValidation,
@@ -31,13 +30,13 @@ import {
     processEditProjectForm,
     projectValidation
 } from './controllers/projects.js';
-
 import {
     showUserRegistrationForm,
     processUserRegistrationForm,
     showLoginForm,
     processLoginForm,
     processLogout,
+    requireRole,
     requireLogin,
     showDashboard
 } from './controllers/users.js';
