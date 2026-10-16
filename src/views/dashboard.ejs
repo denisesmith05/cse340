@@ -5,6 +5,9 @@
     <h2>Dashboard</h2>
     <p>Name: <%= name %></p>
     <p>Username: <%= email %></p>
+    <% if (isAdmin) { %>
+        <p><a href="/users">View registered users</a></p>
+    <% } %>
 </main>
 
 <%- include('partials/footer') %>
