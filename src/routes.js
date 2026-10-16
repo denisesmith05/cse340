@@ -31,20 +31,16 @@ import {
     projectValidation
 } from './controllers/projects.js';
 
-import { showUserRegistrationForm, 
-         processUserRegistrationForm,
-         showLoginForm,
-         processLoginForm,
-         processLogout } from './controllers/users.js';
-
 import {
     showUserRegistrationForm,
     processUserRegistrationForm,
+    showLoginForm,
+    processLoginForm,
+    processLogout,
     requireLogin
 } from './controllers/users.js';
 
 import { showDashboard } from './controllers/dashboard.js';
-
 
 const router = express.Router();
 
@@ -85,7 +81,7 @@ router.get('/login', showLoginForm);
 router.post('/login', processLoginForm);
 router.get('/logout', processLogout);
 
-// User dashboard routes
+// Protected dashboard route
 router.get('/dashboard', requireLogin, showDashboard);
 
 router.get('/test-error', testErrorPage);
