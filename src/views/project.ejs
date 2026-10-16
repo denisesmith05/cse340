@@ -15,13 +15,13 @@
             <%= project.organization_name %>
         </a>
     </p>
-    <% if (isAdmin) { %>
+    <% if (user && user.role_name === 'admin') { %>
         <p>
             <a href="/edit-project/<%= project.project_id %>">Edit Project</a>
         </p>
     <% } %>
     <h2>Categories</h2>
-    <% if (isAdmin) { %>
+    <% if (user && user.role_name === 'admin') { %>
         <p>
             <a href="/project/<%= project.project_id %>/assign-categories">
                 Edit Categories

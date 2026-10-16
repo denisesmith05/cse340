@@ -60,8 +60,9 @@ app.use((req, res, next) => {
 
 // Middleware to make NODE_ENV available to all templates
 app.use((req, res, next) => {
-    const user = req.session?.user;
+    const user = req.session?.user || null;
     res.locals.isLoggedIn = Boolean(user);
+    res.locals.user = user;
     res.locals.isAdmin = user?.role_name === 'admin';
     
     res.locals.NODE_ENV = NODE_ENV;
