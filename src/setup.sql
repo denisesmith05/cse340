@@ -194,13 +194,6 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- project volunteer
-CREATE TABLE project_volunteer (
-    project_id INTEGER NOT NULL REFERENCES project(project_id) ON DELETE CASCADE,
-    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
-    PRIMARY KEY (project_id, user_id)
-);
-
 -- Insert a test user
 INSERT INTO users (name, email, password_hash, role_id) 
 VALUES ('testuser', 'test@example.com', 'placeholder_hash', 1);
@@ -220,6 +213,13 @@ WHERE email = 'denise.sunshine@icloud.com';
 -- View all users and roles
 SELECT * FROM users;
 SELECT * FROM roles;
+
+-- project volunteer
+CREATE TABLE project_volunteer (
+    project_id INTEGER NOT NULL REFERENCES project(project_id) ON DELETE CASCADE,
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, user_id)
+);
 
 -- Update the dedicated admin testing account to have admin role
 UPDATE users SET role_id = (SELECT role_id FROM roles WHERE role_name = 'admin') WHERE email = 'admin@example.com';
