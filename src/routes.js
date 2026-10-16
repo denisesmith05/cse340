@@ -31,6 +31,8 @@ import {
     projectValidation
 } from './controllers/projects.js';
 
+import { showUserRegistrationForm, processUserRegistrationForm } from './controllers/users.js';
+
 const router = express.Router();
 
 router.get('/', showHomePage);
