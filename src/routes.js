@@ -41,8 +41,6 @@ import {
     showDashboard
 } from './controllers/users.js';
 
-import { showDashboard } from './controllers/dashboard.js';
-
 const router = express.Router();
 
 router.get('/', showHomePage);
