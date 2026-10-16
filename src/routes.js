@@ -61,6 +61,10 @@ router.post('/edit-project/:id', projectValidation, processEditProjectForm);
 router.get('/edit-category/:id', showEditCategoryForm);
 router.post('/edit-category/:id', categoryValidation, processEditCategoryForm);
 
+// User registration routes
+router.get('/register', showUserRegistrationForm);
+router.post('/register', processUserRegistrationForm);
+
 router.get('/test-error', testErrorPage);
 
 export default router;
