@@ -1,0 +1,177 @@
+Assistant:
+Welcome! Just to be clear from the start, this is a coaching session, not a test. It is perfectly okay—and even encouraged—to say 'I don't know' or 'I made a mistake.' That's the fastest way we'll learn today.
+I'm your supportive, non-judgmental Learning Coach and Software Mentor for your Week 05 coaching session. We'll talk through your assignment together, explore the decisions you made in your code, and work through any concepts that feel confusing. There are no grades or pass/fail requirements here.
+We'll make sure we cover all four required topics: registration and password hashing, login and sessions, protected access middleware, and role-based navigation links. For each topic, we'll look at a meaningful snippet of your actual code and discuss what it does and why you implemented it that way. Since we're chatting here, I'll ask you to paste the relevant code whenever we need to examine it.
+At the end, I'll help you create a downloadable .txt transcript of our conversation.
+To get started, what name would you like me to use for you during our coaching session?
+Denise (User):
+Denise
+Assistant:
+Nice to meet with you, Denise! 😊
+I'm glad you're here. This is a safe learning space, and we're going to take things one step at a time. Mistakes are a normal part of software development, and explaining your thought process is just as important as getting the code right.
+We'll let the conversation flow naturally while making sure we cover all four topics for your Week 05 assignment.
+Let's begin with Topic 1: Registration and Password Hashing.
+Denise, in your assignment, how does your application create a new user account, and what happens to the user's password before it gets stored in the database?
+
+Topic 1 — Registration and Password Hashing
+Denise (User):
+A user creates an account by submitting the registration form at /register. The POST /register route sends the form data to processUserRegistrationForm in users.js.
+Before storage, the app generates a bcrypt salt and hashes the password. It then passes the name, email, and hash—not the original password—to createUser, which stores them in the database and assigns the new account the default user role. After successful registration, the user is prompted to log in.
+Assistant:
+That's a clear explanation, Denise! You're describing the registration process from the moment the user submits the form all the way through storing the account in the database.
+One important security detail you identified is that the database stores the password hash, not the original password. Bcrypt is designed to make it computationally difficult to recover the original password from that hash. The default user role also helps ensure that a newly registered account doesn't automatically receive elevated privileges.
+Let's look at how you implemented this in your own application.
+Could you paste the relevant code snippet from users.js that handles password hashing and calls createUser, and explain why you chose that approach?
+Denise (User):
+const processUserRegistrationForm = async (req, res) => {
+    const { name, email, password } = req.body;
+
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(password, salt);
+
+        await createUser(name, email, passwordHash);
+
+        req.flash('success', 'Registration successful! Please log in.');
+        res.redirect('/');
+    } catch (error) {
+        console.error('Error registering user:', error);
+        req.flash('error', 'An error occurred during registration. Please try again.');
+        res.redirect('/register');
+    }
+};
+
+
+I chose bcrypt because it hashes passwords with a salt, making stored hashes harder to crack if the database is exposed. createUser receives and stores the hash—not the original password.
+Assistant:
+Excellent, Denise! You've explained both what the code does and why you chose bcrypt. Let's reinforce a couple of important concepts from your implementation.
+- bcrypt.genSalt(10) generates a random salt, with 10 specifying the work factor.
+- bcrypt.hash(password, salt) uses that salt to create the password hash.
+- await createUser(name, email, passwordHash) waits for the database operation to complete before showing the success message and redirecting the user.
+One additional security consideration is that your try...catch handles errors, but you'll also want to validate the submitted fields and handle duplicate email addresses appropriately.
+Why do you think bcrypt uses a salt when hashing a password instead of simply hashing the password by itself?
+Denise (User):
+A salt makes each password hash unique, even when two users choose the same password. That prevents attackers from recognizing matching hashes and makes precomputed lookup tables (such as rainbow tables) far less useful. bcrypt stores the salt with the hash, so it can use that same salt to verify a password at login.
+Assistant:
+Exactly right, Denise! You've identified the key security benefits of salting passwords.
+Even when two users choose the same password, their hashes will generally differ because bcrypt uses a different random salt for each hash. And you're right that bcrypt stores the salt as part of the resulting hash string, so you don't need to store the salt in a separate database column.
+You've demonstrated a solid understanding of Topic 1: Registration and Password Hashing. Nice work!
+Let's move on to Topic 2: Login and Sessions.
+When a user logs in, the application needs to verify their credentials and remember that they've authenticated as they navigate between pages.
+Could you paste the relevant code from your login route or controller that verifies the password and creates or updates the user's session, and explain how you think it works?
+
+Topic 2 — Login and Sessions
+Denise (User):
+const processLoginForm = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await authenticateUser(email, password);
+
+        if (!user) {
+            req.flash('error', 'Invalid email or password.');
+            return res.redirect('/login');
+        }
+
+
+In the users model, bcrypt compares the submitted password with the stored hash:
+const verifyPassword = async (password, passwordHash) => {
+    return bcrypt.compare(password, passwordHash);
+};
+
+
+I think authenticateUser looks up the account by email, verifies the password, and returns null if it doesn’t match. On success, it removes the password hash from the user object before returning it. The controller puts that safe user data—including their role—in req.session.user, so subsequent requests can recognize the logged-in user.
+Assistant:
+Well explained, Denise! You're connecting the responsibilities of the model and controller, which is an important part of understanding the MVC pattern.
+Here's what I like about your explanation:
+- Model: authenticateUser() looks up the account and uses bcrypt.compare() to verify the submitted password against the stored hash. You don't need to decrypt the hash.
+- Controller: processLoginForm() handles the result. If authentication fails, it redirects the user to the login page with an error message.
+- Session: Storing the authenticated user's safe information in req.session.user allows the application to recognize that user across subsequent requests, including their role.
+- Security: Removing the password hash before returning the user object reduces the risk of accidentally exposing it elsewhere in the application.
+One important distinction: the session must be backed by appropriate session middleware and configured storage. The session cookie typically identifies the session; it shouldn't contain the user's password.
+Why do you think your application stores the logged-in user's information in req.session.user instead of requiring the user to enter their email and password on every page they visit?
+Denise (User):
+The session lets the app remember that a user has already authenticated across requests. The browser sends its session cookie with each request, and Express uses it to retrieve req.session.user. This is more convenient and secure than repeatedly sending the password, and it lets middleware check login status and roles for protected pages. On logout, the app removes the user from the session.
+Assistant:
+Exactly, Denise! You've explained the purpose of sessions very well. HTTP requests are stateless, meaning the server doesn't automatically remember who made the previous request. Sessions provide a way to maintain that authenticated state across requests.
+You're also right about logout: removing the user information from the session helps prevent the application from treating them as logged in. Depending on your implementation, destroying the session entirely is another common logout approach.
+You've completed Topic 2: Login and Sessions. Great job connecting authentication, session cookies, and middleware!
+Let's move on to Topic 3: Protected Access Middleware.
+In Express, middleware such as requireLogin and requireRole can protect routes by checking whether a user is authenticated and whether they have the necessary role before allowing access.
+Could you paste your requireLogin and/or requireRole middleware code, and explain how it decides whether a request should proceed or be denied?
+
+Topic 3 — Protected Access Middleware
+Denise (User):
+const requireRole = (role) => {
+    return (req, res, next) => {
+        if (!req.session?.user) {
+            req.flash('error', 'You must be logged in to access this page.');
+            return res.redirect('/login');
+        }
+
+        if (req.session.user.role_name !== role) {
+            req.flash('error', 'You do not have permission to access this page.');
+            return res.redirect('/dashboard');
+        }
+
+        next();
+    };
+};
+
+const requireLogin = (req, res, next) => {
+    if (!req.session?.user) {
+        req.flash('error', 'You must be logged in to access that page.');
+        return res.redirect('/login');
+    }
+
+    next();
+};
+
+
+requireLogin checks whether a user is in the session. If not, it flashes an error and redirects to login; otherwise, next() lets the request continue.
+requireRole(role) first requires a logged-in user, then compares the session user’s role_name with the required role. Missing authentication redirects to login; a wrong role gets an error message and is redirected to the dashboard. If both checks pass, next() proceeds to the route handler.
+Assistant:
+Great explanation, Denise! You've clearly identified the difference between authentication and authorization.
+- requireLogin checks authentication: has the user logged in?
+- requireRole(role) checks authorization: does the logged-in user have the required role?
+- next() passes control to the next middleware or route handler when the checks succeed.
+- return res.redirect(...) stops the middleware from continuing after a failed check.
+I also like that your requireRole middleware checks for a logged-in user before checking their role. That prevents the application from trying to authorize someone who hasn't authenticated.
+One security principle worth remembering is that hiding a link in the interface isn't enough to protect a route. A user could manually type a URL into their browser, so the server-side middleware must enforce the restriction.
+Let's connect this to how users navigate your application.
+Topic 4: Protected Access Links and Navigation
+Could you paste the relevant EJS code from your navigation template that conditionally displays links based on the logged-in user's role, and explain why you chose to show or hide those links?
+
+Topic 4 — Protected Access Links and Navigation
+Denise (User):
+The navigation template header.ejs switches between login/register and logout links based on whether the user is logged in. It does not check the user’s role:
+<% if (isLoggedIn) { %>
+    <li><a href="/logout">Logout</a></li>
+<% } else { %>
+    <li><a href="/register">Register</a></li>
+    <li><a href="/login">Login</a></li>
+<% } %>
+
+
+The admin-only users link is in the dashboard template dashboard.ejs:
+<% if (isAdmin) { %>
+    <p><a href="/users">View registered users</a></p>
+<% } %>
+
+
+This keeps the users link out of non-admin dashboards. Hiding a link is only a visibility choice—not access control—so the /users route also checks the role with requireRole('admin').
+Assistant:
+Denise, that's an excellent explanation! You've made an important distinction between controlling what users see and controlling what users can access.
+Here's how your implementation works:
+- header.ejs: Uses isLoggedIn to display either the logout link or the login and registration links.
+- dashboard.ejs: Uses isAdmin to display the “View registered users” link only to administrators.
+- Server-side authorization: Protects /users with requireRole('admin'), so a non-admin cannot gain access simply by typing the URL into their browser.
+This is a good example of defense in depth: the interface provides a clean user experience, while the server enforces the actual security rules.
+You've now covered all four required topics!
+7. Coaching session wrap-up
+Assistant:
+1. Registration and Password Hashing: You explained bcrypt salts, password hashing, and storing hashes instead of plaintext passwords.
+2. Login and Sessions: You explained credential verification, session persistence, and logout behavior.
+3. Protected Access Middleware: You distinguished authentication from authorization and explained how requireLogin, requireRole, and next() work.
+4. Protected Links and Navigation: You explained conditional EJS rendering and why server-side authorization is still necessary.
+You've demonstrated your understanding by explaining your own code and the reasoning behind your design choices. That's exactly what this coaching session was intended to help you practice.
