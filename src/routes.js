@@ -37,6 +37,15 @@ import { showUserRegistrationForm,
          processLoginForm,
          processLogout } from './controllers/users.js';
 
+import {
+    showUserRegistrationForm,
+    processUserRegistrationForm,
+    requireLogin
+} from './controllers/users.js';
+
+import { showDashboard } from './controllers/dashboard.js';
+
+
 const router = express.Router();
 
 router.get('/', showHomePage);
@@ -75,6 +84,9 @@ router.post('/register', processUserRegistrationForm);
 router.get('/login', showLoginForm);
 router.post('/login', processLoginForm);
 router.get('/logout', processLogout);
+
+// User dashboard routes
+router.get('/dashboard', requireLogin, showDashboard);
 
 router.get('/test-error', testErrorPage);
 
