@@ -12,6 +12,8 @@
             </li>
         <% }) %>
     </ul>
-    <p><a href="/edit-category/<%= category.category_id %>">Edit category</a></p>
+    <% if (isAdmin) { %>
+        <p><a href="/edit-category/<%= category.category_id %>">Edit category</a></p>
+    <% } %>
 </main>
 <%- include('partials/footer') %>

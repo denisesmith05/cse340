@@ -8,10 +8,14 @@
                     <img src="/images/<%= organization.logo_filename %>" alt="<%= organization.name %> logo">
                     <a href="/organization/<%= organization.organization_id %>"><%= organization.name %></a>: 
                     <%= organization.contact_email %>
-                    <a href="/edit-organization/<%= organization.organization_id %>">Edit Organization</a>
+                    <% if (isAdmin) { %>
+                        <a href="/edit-organization/<%= organization.organization_id %>">Edit Organization</a>
+                    <% } %>
                 </li>
             <% }); %>
         </ul>
-        <p><a href="/new-organization">Add a new organization</a></p>
+        <% if (isAdmin) { %>
+            <p><a href="/new-organization">Add a new organization</a></p>
+        <% } %>
     </main>
 <%- include('partials/footer') %>

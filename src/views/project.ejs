@@ -15,15 +15,19 @@
             <%= project.organization_name %>
         </a>
     </p>
-    <p>
-        <a href="/edit-project/<%= project.project_id %>">Edit Project</a>
-    </p>
+    <% if (isAdmin) { %>
+        <p>
+            <a href="/edit-project/<%= project.project_id %>">Edit Project</a>
+        </p>
+    <% } %>
     <h2>Categories</h2>
-    <p>
-        <a href="/project/<%= project.project_id %>/assign-categories">
-            Edit Categories
-        </a>
-    </p>
+    <% if (isAdmin) { %>
+        <p>
+            <a href="/project/<%= project.project_id %>/assign-categories">
+                Edit Categories
+            </a>
+        </p>
+    <% } %>
     <div class="category-tags">
         <% categories.forEach(category => { %>
             <a class="category-tag" href="/category/<%= category.category_id %>">
